@@ -4,23 +4,26 @@ class Customer {
   String contactPhone;
   double tripPrice;
 
-  Customer(
-      this.destination, this.contactName, this.contactPhone, this.tripPrice);
+  Customer(this.destination, this.contactName, this.contactPhone, this.tripPrice);  
 }
 
 class Individual extends Customer {
-  bool hasTravelInsurance = false;
+  String policyNumber;
 
   Individual(super.destination, super.contactName, super.contactPhone,
-      super.tripPrice, this.hasTravelInsurance);
+      super.tripPrice, this.policyNumber);
 }
 
 class Family extends Customer {
-  bool hasCoverage = false;
   String insuranceCompany;
 
   Family(super.destination, super.contactName, super.contactPhone,
-      super.tripPrice, this.hasCoverage, this.insuranceCompany);
+      super.tripPrice, this.insuranceCompany);
 }
 
-class Group extends Customer {}
+class Group extends Customer {
+  String materialRequired;
+
+  Group(super.destination, super.contactName, super.contactPhone,
+      super.tripPrice, this.materialRequired);
+}
