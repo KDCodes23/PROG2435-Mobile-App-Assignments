@@ -1,12 +1,19 @@
 import 'dart:io';
+import 'package:assignment1/trip_planner.dart';
 
-import 'package:assignment1/trip_planner.dart' as trip_planner;
+void showPackages(String category) {
+  int iter = 0;
+  for (String package in packages[category]!.keys) {
+    print("${++iter} $package - \$${packages[category]![package]}");
+  }
+}
 
 void main(List<String> arguments) {
   // Main code starts here...
+  List<Customer> customers = [];
   int iter = 0;
   print("Select packages for:");
-  for (String category in trip_planner.packages.keys) {
+  for (String category in packages.keys) {
     print("${++iter} $category");
   }
   iter = 0;
@@ -15,22 +22,20 @@ void main(List<String> arguments) {
   switch (categoryType!) {
     case "1":
       category = "Individual";
+      print("Select packages:");
+      showPackages(category);
       break;
     case "2":
       category = "Family";
+      print("Select packages:");
+      showPackages(category);
       break;
     case "3":
       category = "Group";
+      print("Select packages:");
+      showPackages(category);
       break;
     default:
       break;
   }
-  print("Select packages:");
-  for (String package in trip_planner.packages[category]!.keys) {
-    print(
-        "${++iter} $package - \$${trip_planner.packages[category]![package]}");
-  }
-  iter = 0;
-  String? selectedPackage = stdin.readLineSync();
-  
 }
