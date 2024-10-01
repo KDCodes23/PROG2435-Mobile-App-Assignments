@@ -71,18 +71,16 @@ class Family extends Customer {
 }
 
 class Group extends Customer {
-  List<String> materialsRequired;
+  String materialRequired;
 
   Group(super.destination, super.contactName, super.contactPhone,
-      super.tripPrice, this.materialsRequired);
+      super.tripPrice, this.materialRequired);
 
   @override
   void bookTravel() {
     super.bookTravel();
     print("Destination company notified! Group leader is: $contactName");
     print("Organized hardware:");
-    for (String material in materialsRequired) {
-      print("\t $material");
+    print("Required Material: $materialRequired");
     }
-  }
 }
