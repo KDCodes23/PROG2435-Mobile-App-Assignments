@@ -17,10 +17,11 @@ Map<String, Map> packages = {
 };
 
 Map<String, double> equipment = {
-  "Whistle": 2,
-  "Flags": 3,
-  "Water bottles": 5,
-  "Rain coats": 20,
+  "Whistle": 2.0,
+  "Flags": 3.0,
+  "Water bottles": 5.0,
+  "Rain coats": 20.0,
+  "No equipment": 0.0
 };
 
 class Customer {
@@ -30,10 +31,21 @@ class Customer {
   double tripPrice;
 
   Customer(
-      this.destination, this.contactName, this.contactPhone, this.tripPrice);
+      this.destination, this.contactName, this.contactPhone, this.tripPrice) {
+    if (!contactName.contains(RegExp('[A-Za-z ]+'))) {
+      throw ArgumentError(
+          "Customer name can only has letters and spaces", "customerName");
+    }
+    if (contactPhone.length != 10 ||
+        !contactPhone.contains(RegExp(r"\d{10}"))) {
+      throw ArgumentError(
+          "Phone number can only have 10 digits. Example: 9876543210",
+          "contactPhone");
+    }
+  }
 
   void bookTravel() {
-    print("Travel booked for $contactName to $destination.");
+    print("\nTravel booked for $contactName to $destination.");
   }
 
   void arrangeTransport() {
@@ -50,6 +62,7 @@ class Individual extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("$contactName's workplace has been notified");
     print("Your insurance policy number is: $policyNumber");
   }
@@ -65,6 +78,7 @@ class Family extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("Health coverage is provided by $insuranceCompany");
     print("Family member remaining in Canada: $memberInCanada");
   }
@@ -79,8 +93,8 @@ class Group extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("Destination company notified! Group leader is: $contactName");
-    print("Organized hardware:");
-    print("Required Material: $materialRequired");
-    }
+    print("Organized hardware: $materialRequired");
+  }
 }

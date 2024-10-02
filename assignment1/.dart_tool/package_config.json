@@ -230,6 +230,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "string_validator",
+      "rootUri": "file:///C:/Users/krish/AppData/Local/Pub/Cache/hosted/pub.dev/string_validator-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "term_glyph",
       "rootUri": "file:///C:/Users/krish/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1",
       "packageUri": "lib/",
@@ -308,7 +314,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-09-21T20:02:50.419283Z",
+  "generated": "2024-10-02T17:48:50.922597Z",
   "generator": "pub",
   "generatorVersion": "3.5.2",
   "flutterRoot": "file:///C:/Users/krish/flutter",
