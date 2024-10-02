@@ -32,7 +32,7 @@ class Customer {
 
   Customer(
       this.destination, this.contactName, this.contactPhone, this.tripPrice) {
-    if (!contactName.contains(RegExp('[A-Za-z ]+'))) {
+    if (!contactName.contains(RegExp('[A-Za-z ]+')) || contactName.contains(RegExp("\d*"))) {
       throw ArgumentError(
           "Customer name can only has letters and spaces", "customerName");
     }
