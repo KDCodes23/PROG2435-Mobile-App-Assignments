@@ -1,19 +1,27 @@
 Map<String, Map> packages = {
   "Individual": {
     "Blue Mountain": 200,
-    "Niagara": 100,
+    "Niagara Falls": 100,
     "Banff National Park": 300,
   },
   "Family": {
     "Blue Mountain": 400,
-    "Niagara": 300,
+    "Niagara Falls": 300,
     "Banff National Park": 700,
   },
   "Group": {
     "Blue Mountain": 700,
-    "Niagara": 1000,
+    "Niagara Falls": 1000,
     "Banff National Park": 1300,
   }
+};
+
+Map<String, double> equipment = {
+  "Whistle": 2.0,
+  "Flags": 3.0,
+  "Water bottles": 5.0,
+  "Rain coats": 20.0,
+  "No equipment": 0.0
 };
 
 class Customer {
@@ -26,7 +34,7 @@ class Customer {
       this.destination, this.contactName, this.contactPhone, this.tripPrice);
 
   void bookTravel() {
-    print("Travel booked for $contactName to $destination.");
+    print("\nTravel booked for $contactName to $destination.");
   }
 
   void arrangeTransport() {
@@ -43,6 +51,7 @@ class Individual extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("$contactName's workplace has been notified");
     print("Your insurance policy number is: $policyNumber");
   }
@@ -58,6 +67,7 @@ class Family extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("Health coverage is provided by $insuranceCompany");
     print("Family member remaining in Canada: $memberInCanada");
   }
@@ -72,6 +82,7 @@ class Group extends Customer {
   @override
   void bookTravel() {
     super.bookTravel();
+    super.arrangeTransport();
     print("Destination company notified! Group leader is: $contactName");
     print("Organized hardware: $materialRequired");
   }
