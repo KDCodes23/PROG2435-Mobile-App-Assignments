@@ -31,18 +31,7 @@ class Customer {
   double tripPrice;
 
   Customer(
-      this.destination, this.contactName, this.contactPhone, this.tripPrice) {
-    if (!contactName.contains(RegExp('[A-Za-z ]+')) || contactName.contains(RegExp("\d*"))) {
-      throw ArgumentError(
-          "Customer name can only has letters and spaces", "customerName");
-    }
-    if (contactPhone.length != 10 ||
-        !contactPhone.contains(RegExp(r"\d{10}"))) {
-      throw ArgumentError(
-          "Phone number can only have 10 digits. Example: 9876543210",
-          "contactPhone");
-    }
-  }
+      this.destination, this.contactName, this.contactPhone, this.tripPrice);
 
   void bookTravel() {
     print("\nTravel booked for $contactName to $destination.");

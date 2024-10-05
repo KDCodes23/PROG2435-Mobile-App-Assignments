@@ -1,20 +1,29 @@
 import 'dart:io';
 import 'package:assignment1/trip_planner.dart';
 
+// Global iterable for printing index in menus
 int iter = 0;
+
+// Map object for package names
 Map packageMapping = {
   "1": "Blue Mountain",
   "2": "Niagara Falls",
   "3": "Banff National Park"
 };
 
+/// Get input from user
+String getInput(String prompt) {
+  stdout.write(prompt);
+  return stdin.readLineSync() ?? "";
+}
+
+/// Return package name
 String getPackage(String category) {
   for (String package in packages[category]!.keys) {
     print("${++iter} $package - \$${packages[category]![package]}");
   }
   iter = 0;
-  print("Enter destination: ");
-  String? destinationType = stdin.readLineSync();
+  String destinationType = getInput("Enter destination: ");
   if (destinationType == "1" ||
       destinationType == "2" ||
       destinationType == "3") {
@@ -25,6 +34,9 @@ String getPackage(String category) {
   }
 }
 
+/// Get required material for the trip.
+///
+/// Specific to Group trip booking.
 String getRequiredMaterials() {
   String requiredEquipment = "";
 
@@ -33,8 +45,7 @@ String getRequiredMaterials() {
     print("${++iter} $equip - \$${equipment[equip]}");
   }
   iter = 0;
-  print("Select the equipment you need: ");
-  String? equipNum = stdin.readLineSync();
+  String equipNum = getInput("Select the equipment you need: ");
   switch (equipNum) {
     case "1":
       requiredEquipment = "Whistle";
@@ -60,6 +71,43 @@ String getRequiredMaterials() {
   return requiredEquipment;
 }
 
+/// Handles booking for all three groups.
+///
+/// Params:
+///
+/// `category` -> String : Individual, Family, Group
+///
+/// `bookTrip` -> Function : Complete the leftout inputs and add a new customer to the customers list.
+void handleBooking(String category, Function bookTrip) {
+  print("Select packages:");
+  String destination = getPackage(category);
+  while (true) {
+    try {
+      String contactName = getInput("Enter your name: ");
+      // Validation for name
+      if (contactName.contains(RegExp(r"\d")) || contactName.isEmpty) {
+        throw ArgumentError(
+            "Customer name can only has letters and spaces", "customerName");
+      }
+
+      String contactPhone = getInput("Enter your phone number: ");
+      // Validation for phone number
+      if (contactPhone.length != 10 ||
+          !contactPhone.contains(RegExp(r"\d{10}"))) {
+        throw ArgumentError(
+            "Phone number can only have 10 digits. Example: 9876543210",
+            "contactPhone");
+      }
+      double tripPrice = packages[category]![destination].toDouble();
+
+      bookTrip(destination, contactName, contactPhone, tripPrice);
+      break;
+    } on ArgumentError catch (e) {
+      print(e);
+    }
+  }
+}
+
 void main(List<String> arguments) {
   // Main code starts here...
   String addMore = "y";
@@ -68,103 +116,46 @@ void main(List<String> arguments) {
 
   while (addMore.toLowerCase() == "y") {
     bool validInput = true;
-    String destination;
-    String? contactName;
-    String? contactPhone;
-    double tripPrice;
 
     print("Select packages for:");
     for (String category in packages.keys) {
       print("${++iter} $category");
     }
     iter = 0;
-    print("Select package type: ");
-    String? categoryType = stdin.readLineSync();
-    String category = "";
-    switch (categoryType!) {
+    String? categoryType = getInput("Select package type: ");
+    switch (categoryType) {
       case "1":
-        category = "Individual";
+        handleBooking("Individual",
+            (destination, contactName, contactPhone, tripPrice) {
+          String policyNumber = getInput("Enter your policy number: ");
+          customers.add(Individual(
+              destination, contactName, contactPhone, tripPrice, policyNumber)
+            ..bookTravel());
+        });
 
-        print("Select packages:");
-        destination = getPackage(category);
-        while (true) {
-          try {
-            print("Enter your name: ");
-            contactName = stdin.readLineSync();
-
-            print("Enter your phone number: ");
-            contactPhone = stdin.readLineSync();
-
-            tripPrice = packages[category]![destination].toDouble();
-
-            print("Enter your policy number: ");
-            String? policyNumber = stdin.readLineSync();
-
-            customers.add(Individual(destination, contactName!, contactPhone!,
-                tripPrice, policyNumber!)
-              ..bookTravel());
-            break;
-          } on ArgumentError catch (e) {
-            print(e);
-          }
-        }
         break;
       case "2":
-        category = "Family";
+        handleBooking("Family",
+            (destination, contactName, contactPhone, tripPrice) {
+          String insuranceCompany = getInput("Who is your insurance company? ");
 
-        print("Select packages:");
-        destination = getPackage(category);
-        while (true) {
-          try {
-            print("Enter name: ");
-            contactName = stdin.readLineSync();
+          String memberInCanada =
+              getInput("Enter name of family member staying in Canada: ");
 
-            print("Enter your phone number: ");
-            contactPhone = stdin.readLineSync();
-
-            tripPrice = packages[category]![destination].toDouble();
-
-            print("Who is your insurance company? ");
-            String? insuranceCompany = stdin.readLineSync();
-
-            print("Enter name of family member staying in Canada: ");
-            String? memberInCanada = stdin.readLineSync();
-
-            customers.add(Family(destination, contactName!, contactPhone!,
-                tripPrice, insuranceCompany!, memberInCanada!)
-              ..bookTravel());
-            break;
-          } on ArgumentError catch (e) {
-            print(e);
-          }
-        }
+          customers.add(Family(destination, contactName!, contactPhone!,
+              tripPrice, insuranceCompany, memberInCanada)
+            ..bookTravel());
+        });
         break;
       case "3":
-        category = "Group";
-
-        print("Select packages:");
-        destination = getPackage(category);
-        while (true) {
-          try {
-            print("Enter group leader's name: ");
-            contactName = stdin.readLineSync();
-
-            print("Enter group leader's phone number: ");
-            contactPhone = stdin.readLineSync();
-
-            tripPrice = packages[category]![destination].toDouble();
-
-            String materialRequired = getRequiredMaterials();
-            tripPrice += equipment[materialRequired] ?? 0;
-            customers.add(Group(destination, contactName!, contactPhone!,
-                tripPrice, materialRequired)
-              ..bookTravel());
-
-            break;
-          } on ArgumentError catch (e) {
-            print(e);
-          }
-        }
+        handleBooking("Group",
+            (destination, contactName, contactPhone, tripPrice) {
+          String materialRequired = getRequiredMaterials();
+          tripPrice += equipment[materialRequired] ?? 0;
+          customers.add(Group(destination, contactName, contactPhone, tripPrice,
+              materialRequired)
+            ..bookTravel());
+        });
         break;
       default:
         validInput = false;
@@ -174,23 +165,18 @@ void main(List<String> arguments) {
       print("\nSelect a valid group \n");
       continue;
     }
-
-    // TODO: Remove customer details block
-    print("\n----------Customer Details----------\n");
-    for (Customer c in customers) {
-      print(c.contactName);
-      print(c.contactPhone);
-      print(c.destination);
-      print(c.tripPrice);
-    }
-
-    print("Add more packages (y/n)");
-    addMore = stdin.readLineSync() ?? "";
+    addMore = getInput("\nAdd more packages (y/n)");
   }
+  print("\n----------Customer Details----------\n");
+  print("Total customers:  ${customers.length}\n");
   for (Customer c in customers) {
+    print("Category: ${c.runtimeType}");
+    print(c.contactName);
+    print(c.contactPhone);
+    print(c.destination);
+    print(c.tripPrice);
+    print("");
     totalTripsPrice += c.tripPrice;
   }
-  print("\nTotal price of all trips is: \$$totalTripsPrice");
+  print("Total price of all trips is: \$$totalTripsPrice");
 }
-
-// TODO: Add comments
