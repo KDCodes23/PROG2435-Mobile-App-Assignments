@@ -29,17 +29,15 @@ class Customer {
   String contactName;
   String contactPhone;
   double tripPrice;
-
+  
   Customer(
       this.destination, this.contactName, this.contactPhone, this.tripPrice);
 
-  void bookTravel() {
-    print("\nTravel booked for $contactName to $destination.");
-  }
-
-  void arrangeTransport() {
-    print("Transport has been arranged for $contactName");
-  }
+  // Arrow functions
+  void bookTravel() =>
+      print("\nTravel booked for $contactName to $destination.");
+  void arrangeTransport() =>
+      print("Transport has been arranged for $contactName");
 }
 
 class Individual extends Customer {

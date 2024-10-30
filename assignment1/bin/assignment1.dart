@@ -165,18 +165,20 @@ void main(List<String> arguments) {
       print("\nSelect a valid group \n");
       continue;
     }
-    addMore = getInput("\nAdd more packages (y/n)");
+    addMore = getInput("\nAdd more packages (y/n) ");
   }
   print("\n----------Customer Details----------\n");
   print("Total customers:  ${customers.length}\n");
   for (Customer c in customers) {
     print("Category: ${c.runtimeType}");
-    print(c.contactName);
-    print(c.contactPhone);
-    print(c.destination);
-    print(c.tripPrice);
+    print("Name: ${c.contactName}");
+    print("Phone number: ${c.contactPhone}");
+    print("Destination: ${c.destination}");
+    print("Trip Price: \$${c.tripPrice}");
     print("");
     totalTripsPrice += c.tripPrice;
   }
   print("Total price of all trips is: \$$totalTripsPrice");
+  String text = "Hello";
+  text.trim().toLowerCase();
 }
