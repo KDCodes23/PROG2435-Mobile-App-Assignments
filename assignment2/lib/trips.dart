@@ -1,8 +1,8 @@
-// trips.dart
-import 'main.dart';
+/// Enum for Destination
+enum Destinations { blueMountain, niagaraFalls, banffNationalPark }
 
-/// Enum for trip types
-enum TripType { individual, family, group }
+/// Enum for customer type
+enum CustomerType { individual, family, group }
 
 /// Base Trip class
 class Trip {
@@ -20,9 +20,8 @@ class Trip {
 
   // Base toString for common properties
   @override
-  String toString() {
-    return 'Destination: ${destination.name}, Contact Phone: $contactPhone, Email: $email, Price: \$${price.toStringAsFixed(2)}';
-  }
+  String toString() =>
+      'Destination: ${destination.name}, Contact Phone: $contactPhone, Email: $email, Price: \$${price.toStringAsFixed(2)}';
 }
 
 /// IndividualTrip class with specific property: homeAddress
@@ -30,17 +29,12 @@ class IndividualTrip extends Trip {
   final String homeAddress;
 
   IndividualTrip({
-    required Destinations destination,
-    required String contactPhone,
-    required String email,
-    required double price,
+    required super.destination,
+    required super.contactPhone,
+    required super.email,
+    required super.price,
     required this.homeAddress,
-  }) : super(
-          destination: destination,
-          contactPhone: contactPhone,
-          email: email,
-          price: price,
-        );
+  });
 
   @override
   String toString() {
@@ -53,17 +47,12 @@ class FamilyTrip extends Trip {
   final String primaryContact;
 
   FamilyTrip({
-    required Destinations destination,
-    required String contactPhone,
-    required String email,
-    required double price,
+    required super.destination,
+    required super.contactPhone,
+    required super.email,
+    required super.price,
     required this.primaryContact,
-  }) : super(
-          destination: destination,
-          contactPhone: contactPhone,
-          email: email,
-          price: price,
-        );
+  });
 
   @override
   String toString() {
@@ -76,17 +65,12 @@ class GroupTrip extends Trip {
   final String groupInsuranceNumber;
 
   GroupTrip({
-    required Destinations destination,
-    required String contactPhone,
-    required String email,
-    required double price,
+    required super.destination,
+    required super.contactPhone,
+    required super.email,
+    required super.price,
     required this.groupInsuranceNumber,
-  }) : super(
-          destination: destination,
-          contactPhone: contactPhone,
-          email: email,
-          price: price,
-        );
+  });
 
   @override
   String toString() {

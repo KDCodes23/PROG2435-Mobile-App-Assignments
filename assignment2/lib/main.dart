@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-// import 'trips.dart';
-
-enum Destinations { blueMountain, niagaraFalls, banffNationalPark }
+import 'trips.dart';
 
 void main() {
   runApp(const MainApp());
@@ -25,9 +23,17 @@ class TripPlannerForm extends StatefulWidget {
 }
 
 class _TripPlannerFormState extends State<TripPlannerForm> {
+  int customerType = -1;
+  int destination = -1;
+  String contactPhone = "";
+  String emailAddress = "";
+  double tripPrice = 0;
+  String additionalInfo = "";
   String tripsListMessage = "";
+  TripManager manager = TripManager();
 
   final form = FormGroup({
+    'type': FormControl<int>(validators: [Validators.required]),
     'destination': FormControl<int>(validators: [
       Validators.required,
     ]),
@@ -45,11 +51,58 @@ class _TripPlannerFormState extends State<TripPlannerForm> {
       Validators.required,
       Validators.min(0.0),
       Validators.max(1000.0)
-    ])
+    ]),
+    'additionalInfo': FormControl<double>(validators: [Validators.required])
   });
 
-  bookTrip(){}
-  showTrips(){}
+  bookTrip() {
+    if (form.valid) {
+      customerType = form.control('type').value;
+      destination = form.control('destination').value;
+      contactPhone = form.control('contact').value ?? "";
+      emailAddress = form.control('email').value ?? "";
+      tripPrice = form.control('price').value ?? 0;
+      additionalInfo = form.control('additionalInfo').value ?? "";
+    }
+
+    switch (CustomerType.values[customerType]) {
+      case CustomerType.individual:
+        IndividualTrip trip = IndividualTrip(
+            destination: Destinations.values[destination],
+            contactPhone: contactPhone,
+            email: emailAddress,
+            price: tripPrice,
+            homeAddress: additionalInfo);
+        manager.addTrip(trip);
+        break;
+      case CustomerType.family:
+        FamilyTrip trip = FamilyTrip(
+            destination: Destinations.values[destination],
+            contactPhone: contactPhone,
+            email: emailAddress,
+            price: tripPrice,
+            primaryContact: additionalInfo);
+        manager.addTrip(trip);
+
+        break;
+      case CustomerType.group:
+        GroupTrip trip = GroupTrip(
+            destination: Destinations.values[destination],
+            contactPhone: contactPhone,
+            email: emailAddress,
+            price: tripPrice,
+            groupInsuranceNumber: additionalInfo);
+        manager.addTrip(trip);
+        break;
+      default:
+        break;
+    }
+  }
+
+  showTrips() {
+    String allTrips = manager.showAllTrips();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +117,25 @@ class _TripPlannerFormState extends State<TripPlannerForm> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                ReactiveDropdownField(
+                    key: const Key('CustomerType'),
+                    formControlName: 'type',
+                    hint: const Text("Please select customer type"),
+                    items: [
+                      DropdownMenuItem(
+                        value: CustomerType.individual.index,
+                        child: const Text("Individual"),
+                      ),
+                      DropdownMenuItem(
+                        value: CustomerType.family.index,
+                        child: const Text("Family"),
+                      ),
+                      DropdownMenuItem(
+                        value: CustomerType.group.index,
+                        child: const Text("Group"),
+                      ),
+                    ]),
+                const SizedBox(height: 8),
                 ReactiveDropdownField(
                     key: const Key('TripDestination'),
                     formControlName: 'destination',
@@ -97,7 +169,8 @@ class _TripPlannerFormState extends State<TripPlannerForm> {
                 ReactiveTextField(
                     key: const Key("EmailAddress"),
                     formControlName: "email",
-                    decoration: const InputDecoration(labelText: "Email Address"),
+                    decoration:
+                        const InputDecoration(labelText: "Email Address"),
                     textAlign: TextAlign.start,
                     style: const TextStyle(backgroundColor: Colors.white),
                     keyboardType: TextInputType.text),
@@ -110,12 +183,23 @@ class _TripPlannerFormState extends State<TripPlannerForm> {
                     style: const TextStyle(backgroundColor: Colors.white),
                     keyboardType: TextInputType.number),
                 const SizedBox(height: 8),
+                ReactiveTextField(
+                    key: const Key("AdditionalInfo"),
+                    formControlName: "additionalInfo",
+                    decoration: const InputDecoration(
+                        labelText: "Additional Information"),
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(backgroundColor: Colors.white),
+                    keyboardType: TextInputType.text),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FilledButton(onPressed: bookTrip, child: const Text("Book Trip")),
+                    FilledButton(
+                        onPressed: bookTrip, child: const Text("Book Trip")),
                     const SizedBox(height: 10),
-                    FilledButton(onPressed: showTrips, child: const Text("See Trips"))
+                    FilledButton(
+                        onPressed: showTrips, child: const Text("See Trips"))
                   ],
                 ),
                 const SizedBox(height: 8),
