@@ -1,4 +1,4 @@
-/// Enum for Destination
+/// Enum for Destination options
 enum Destinations { blueMountain, niagaraFalls, banffNationalPark }
 
 /// Enum for customer type
@@ -18,10 +18,11 @@ class Trip {
     required this.price,
   });
 
-  // Base toString for common properties
+  /// Common properties for all trips
   @override
   String toString() =>
-      'Destination: ${destination.name}, Contact Phone: $contactPhone, Email: $email, Price: \$${price.toStringAsFixed(2)}';
+      'Destination: ${destination.name}, Contact Phone: $contactPhone, '
+      'Email: $email, Price: \$${price.toStringAsFixed(2)}';
 }
 
 /// IndividualTrip class with specific property: homeAddress
@@ -87,16 +88,25 @@ class TripManager {
     _trips.add(trip);
   }
 
-  /// Returns all trip details as a string
+  /// Returns all trip details as a formatted string
   String showAllTrips() {
     if (_trips.isEmpty) {
       return 'No trips have been booked.';
     }
-    return _trips.map((trip) => trip.toString()).join('\n\n');
+    return _trips
+        .asMap()
+        .entries
+        .map((entry) => 'Trip ${entry.key + 1}:\n${entry.value.toString()}')
+        .join('\n\n');
   }
 
   /// Calculates the total price of all trips
   double calculateTotalPrice() {
     return _trips.fold(0.0, (total, trip) => total + trip.price);
+  }
+
+  /// Clears all trips (useful for resetting or starting a new booking session)
+  void resetTrips() {
+    _trips.clear();
   }
 }
